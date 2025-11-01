@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Recommender Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            min-width: 300px;
+            margin-bottom: 10px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        button {
+            font-weight: bold;
+            padding: 10px 20px;
+            font-size: 32px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-right: 10px; /* Space between buttons */
+        }
+        button:hover {
+            opacity: 0.8; /* Slightly less opaque on hover */
+        }
+        #submitButton {
+            background-color: #28a745;
+            color: white;
+        }
+        #submitButton:hover {
+            background-color: #218838;
+        }
+        #printButton {
+            background-color: #87cefa; /* Light blue color */
+            color: black; /* Text color for light blue button */
+            margin-top: 20px; /* Space between response area and print button */
+        }
+        #printButton:hover {
+            background-color: #00bfff; /* Slightly darker blue on hover */
+        }
+        #responseLabel {
+            margin-top: 30px;
+        }
+        #response {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            color: #212529;
+            font-size: 16px;
+            min-height: 100px;
+            overflow: auto;
+            line-height: 1.5;
+        }
+        #response.error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>Please Enter Your Information</h1>
+    <form id="inputForm">
+        <label for="userInput">Enter your text here. You can enter as many lines as you want. Click Submit button after you complete:</label><br>
+        <textarea id="userInput" name="userInput" placeholder="Enter text here..."></textarea><br>
+        <button type="submit" id="submitButton">Submit</button>
+    </form>
+    <div id="responseLabel">
+        <strong>Your response will be displayed here:</strong>
+    </div>
+    <div id="response">
+        <!-- Response from the server will be displayed here -->
+    </div>
+    <button id="printButton">Print</button>
+
+    <script>
+        document.getElementById('inputForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent form from submitting the traditional way
+
+            const submitButton = document.getElementById('submitButton');
+            const responseDiv = document.getElementById('response');
+
+            // Show "Please wait ..." message
+            responseDiv.innerText = 'Please wait ...';
+            responseDiv.className = ''; // Remove any previous error class
+            submitButton.style.backgroundColor = 'grey'; // Change button color to grey on click
+
+            const userInput = document.getElementById('userInput').value;
+
+            try {
+                // Send user input to the server
+                const response = await fetch('/api/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: userInput })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                // Display server response
+                responseDiv.innerText = data.response || 'No response received';
+                responseDiv.className = ''; // Clear any previous error class
+
+            } catch (error) {
+                console.error('Error:', error);
+                responseDiv.innerText = 'An error occurred while processing your request.';
+                responseDiv.className = 'error'; // Add error class for styling
+
+            } finally {
+                // Restore button color after response is received
+                submitButton.style.backgroundColor = '#28a745'; // Green color
+            }
+        });
+
+        document.getElementById('printButton').addEventListener('click', function () {
+            const responseDiv = document.getElementById('response');
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Print</title></head><body>');
+            printWindow.document.write(responseDiv.innerHTML);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        });
+    </script>
+</body>
+</html>
