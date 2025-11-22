@@ -5,105 +5,379 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Recommender Form</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --error-color: #ef4444;
+            --success-color: #22c55e;
         }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        select,
         textarea {
             width: 100%;
-            min-height: 150px;
-            min-width: 300px;
-            margin-bottom: 10px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea {
+            min-height: 100px;
             resize: vertical;
-            line-height: 1.5;
         }
-        button {
-            font-weight: bold;
-            padding: 10px 20px;
-            font-size: 32px;
+
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        .experience-entry {
+            background-color: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            color: var(--error-color);
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            margin-right: 10px; /* Space between buttons */
+            font-size: 0.9rem;
+            padding: 5px;
         }
-        button:hover {
-            opacity: 0.8; /* Slightly less opaque on hover */
+
+        .remove-btn:hover {
+            text-decoration: underline;
         }
-        #submitButton {
-            background-color: #28a745;
+
+        button.secondary {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        button.secondary:hover {
+            background-color: var(--primary-color);
             color: white;
         }
-        #submitButton:hover {
-            background-color: #218838;
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
         }
-        #printButton {
-            background-color: #87cefa; /* Light blue color */
-            color: black; /* Text color for light blue button */
-            margin-top: 20px; /* Space between response area and print button */
+
+        button.primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            flex: 1;
+            transition: background-color 0.2s;
         }
-        #printButton:hover {
-            background-color: #00bfff; /* Slightly darker blue on hover */
+
+        button.primary:hover {
+            background-color: var(--primary-hover);
         }
+
+        button.print {
+            background-color: #64748b;
+            color: white;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        button.print:hover {
+            background-color: #475569;
+        }
+
         #responseLabel {
-            margin-top: 30px;
+            margin-top: 40px;
+            font-size: 1.2rem;
+            color: var(--text-color);
         }
+
         #response {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #e9ecef;
-            border: 1px solid #ced4da;
-            color: #212529;
-            font-size: 16px;
+            margin-top: 15px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f1f5f9;
+            border: 1px solid var(--border-color);
             min-height: 100px;
-            overflow: auto;
-            line-height: 1.5;
+            white-space: pre-wrap;
         }
+
         #response.error {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-            color: #721c24;
+            background-color: #fef2f2;
+            border-color: #fecaca;
+            color: #991b1b;
         }
     </style>
 </head>
 <body>
-    <h1>Please Enter Your Information</h1>
-    <form id="inputForm">
-        <label for="userInput">Enter your text here. You can enter as many lines as you want. Click Submit button after you complete:</label><br>
-        <textarea id="userInput" name="userInput" placeholder="Enter text here..."></textarea><br>
-        <button type="submit" id="submitButton">Submit</button>
-    </form>
-    <div id="responseLabel">
-        <strong>Your response will be displayed here:</strong>
+    <div class="container">
+        <h1>Job Search Assistant</h1>
+        <form id="inputForm">
+            <!-- Personal Information -->
+            <h2>Personal Information</h2>
+            <div class="row">
+                <div class="col form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required placeholder="John Doe">
+                </div>
+                <div class="col form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="john@example.com">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890">
+            </div>
+
+            <!-- Education -->
+            <h2>Education</h2>
+            <div class="row">
+                <div class="col form-group">
+                    <label for="degree">Highest Degree</label>
+                    <select id="degree" name="degree">
+                        <option value="">Select Degree</option>
+                        <option value="High School">High School Diploma</option>
+                        <option value="Associate">Associate's Degree</option>
+                        <option value="Bachelor">Bachelor's Degree</option>
+                        <option value="Master">Master's Degree</option>
+                        <option value="PhD">PhD / Doctorate</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="col form-group">
+                    <label for="gradYear">Graduation Year</label>
+                    <input type="number" id="gradYear" name="gradYear" min="1950" max="2030" placeholder="2023">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fieldOfStudy">Field of Study / Major</label>
+                <input type="text" id="fieldOfStudy" name="fieldOfStudy" placeholder="e.g. Computer Science, Biology">
+            </div>
+            <div class="form-group">
+                <label for="institution">Institution Name</label>
+                <input type="text" id="institution" name="institution" placeholder="e.g. University of Technology">
+            </div>
+
+            <!-- Experience -->
+            <h2>Work Experience</h2>
+            <div id="experienceContainer">
+                <!-- Experience entries will be added here -->
+            </div>
+            <button type="button" id="addExperienceBtn" class="secondary">+ Add Experience</button>
+
+            <!-- Ideal Job -->
+            <h2>Ideal Job Preferences</h2>
+            <div class="form-group">
+                <label for="desiredIndustry">Desired Industry</label>
+                <input type="text" id="desiredIndustry" name="desiredIndustry" placeholder="e.g. Technology, Healthcare">
+            </div>
+            <div class="form-group">
+                <label for="desiredRole">Desired Role / Title</label>
+                <input type="text" id="desiredRole" name="desiredRole" placeholder="e.g. Software Engineer, Lab Technician">
+            </div>
+            <div class="form-group">
+                <label for="keySkills">Key Skills (Comma separated)</label>
+                <textarea id="keySkills" name="keySkills" placeholder="e.g. Python, Project Management, Communication"></textarea>
+            </div>
+
+            <div class="action-buttons">
+                <button type="submit" id="submitButton" class="primary">Find Jobs</button>
+                <button type="button" id="printButton" class="print">Print Results</button>
+            </div>
+        </form>
+
+        <div id="responseLabel">
+            <strong>AI Recommendations:</strong>
+        </div>
+        <div id="response">
+            <!-- Response from the server will be displayed here -->
+        </div>
     </div>
-    <div id="response">
-        <!-- Response from the server will be displayed here -->
-    </div>
-    <button id="printButton">Print</button>
 
     <script>
+        // Experience Management
+        const experienceContainer = document.getElementById('experienceContainer');
+        const addExperienceBtn = document.getElementById('addExperienceBtn');
+
+        function createExperienceEntry() {
+            const div = document.createElement('div');
+            div.className = 'experience-entry';
+            div.innerHTML = `
+                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
+                <div class="row">
+                    <div class="col form-group">
+                        <label>Job Title</label>
+                        <input type="text" class="exp-title" placeholder="e.g. Manager">
+                    </div>
+                    <div class="col form-group">
+                        <label>Company</label>
+                        <input type="text" class="exp-company" placeholder="e.g. ABC Corp">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Duration (e.g. 2019 - 2022)</label>
+                    <input type="text" class="exp-duration" placeholder="e.g. Jan 2020 - Present">
+                </div>
+                <div class="form-group">
+                    <label>Description / Responsibilities</label>
+                    <textarea class="exp-description" placeholder="Describe your key responsibilities..."></textarea>
+                </div>
+            `;
+            experienceContainer.appendChild(div);
+        }
+
+        // Add initial experience entry
+        createExperienceEntry();
+
+        addExperienceBtn.addEventListener('click', createExperienceEntry);
+
+        // Form Submission
         document.getElementById('inputForm').addEventListener('submit', async function (event) {
-            event.preventDefault(); // Prevent form from submitting the traditional way
+            event.preventDefault();
 
             const submitButton = document.getElementById('submitButton');
             const responseDiv = document.getElementById('response');
 
             // Show "Please wait ..." message
-            responseDiv.innerText = 'Please wait ...';
-            responseDiv.className = ''; // Remove any previous error class
-            submitButton.style.backgroundColor = 'grey'; // Change button color to grey on click
+            responseDiv.innerText = 'Analyzing your profile and finding the best matches...';
+            responseDiv.className = '';
+            const originalBtnText = submitButton.innerText;
+            submitButton.innerText = 'Processing...';
+            submitButton.disabled = true;
+            submitButton.style.opacity = '0.7';
 
-            const userInput = document.getElementById('userInput').value;
+            // Gather Data
+            const formData = {
+                personalInfo: {
+                    fullName: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value
+                },
+                education: {
+                    degree: document.getElementById('degree').value,
+                    gradYear: document.getElementById('gradYear').value,
+                    fieldOfStudy: document.getElementById('fieldOfStudy').value,
+                    institution: document.getElementById('institution').value
+                },
+                experience: Array.from(document.querySelectorAll('.experience-entry')).map(entry => ({
+                    title: entry.querySelector('.exp-title').value,
+                    company: entry.querySelector('.exp-company').value,
+                    duration: entry.querySelector('.exp-duration').value,
+                    description: entry.querySelector('.exp-description').value
+                })),
+                preferences: {
+                    industry: document.getElementById('desiredIndustry').value,
+                    role: document.getElementById('desiredRole').value,
+                    skills: document.getElementById('keySkills').value
+                }
+            };
+
+            // Convert to JSON string for the backend
+            const jsonString = JSON.stringify(formData, null, 2);
+            // Wrap in a descriptive prompt for the AI
+            const promptText = `Here is the structured profile of a job seeker. Please analyze their details and recommend suitable jobs.\n\n${jsonString}`;
 
             try {
-                // Send user input to the server
                 const response = await fetch('/api/process', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ text: userInput })
+                    body: JSON.stringify({ text: promptText })
                 });
 
                 if (!response.ok) {
@@ -114,23 +388,27 @@
 
                 // Display server response
                 responseDiv.innerText = data.response || 'No response received';
-                responseDiv.className = ''; // Clear any previous error class
+                responseDiv.className = '';
 
             } catch (error) {
                 console.error('Error:', error);
-                responseDiv.innerText = 'An error occurred while processing your request.';
-                responseDiv.className = 'error'; // Add error class for styling
+                responseDiv.innerText = 'An error occurred while processing your request. Please try again.';
+                responseDiv.className = 'error';
 
             } finally {
-                // Restore button color after response is received
-                submitButton.style.backgroundColor = '#28a745'; // Green color
+                submitButton.innerText = originalBtnText;
+                submitButton.disabled = false;
+                submitButton.style.opacity = '1';
             }
         });
 
         document.getElementById('printButton').addEventListener('click', function () {
             const responseDiv = document.getElementById('response');
             const printWindow = window.open('', '', 'height=600,width=800');
-            printWindow.document.write('<html><head><title>Print</title></head><body>');
+            printWindow.document.write('<html><head><title>Job Recommendations</title>');
+            printWindow.document.write('<style>body{font-family:sans-serif;padding:20px;line-height:1.6}</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write('<h1>Job Recommendations</h1>');
             printWindow.document.write(responseDiv.innerHTML);
             printWindow.document.write('</body></html>');
             printWindow.document.close();
@@ -140,3 +418,4 @@
     </script>
 </body>
 </html>
+
