@@ -19,18 +19,25 @@ const configPath = path.join(__dirname, 'config.json');
 //console.log('configPath:', configPath);
 
 // Read and parse the JSON configuration file
-let config;
+// Read and parse the JSON configuration file
+let config = {};
 try {
-  const configFile = fs.readFileSync(configPath, 'utf8');
-  config = JSON.parse(configFile);
+  if (fs.existsSync(configPath)) {
+    const configFile = fs.readFileSync(configPath, 'utf8');
+    config = JSON.parse(configFile);
+  }
 } catch (err) {
-  console.error('Error reading or parsing config file:', err);
-  process.exit(1);
+  console.warn('Warning: Could not read config.json, relying on environment variables.');
 }
 
 
-// Extract the OpenAI API key from the configuration
-const openaiApiKey = config.OPENAI_API_KEY;
+// Extract the OpenAI API key from the configuration or environment variables
+const openaiApiKey = process.env.OPENAI_API_KEY || config.OPENAI_API_KEY;
+
+if (!openaiApiKey) {
+    console.error('Error: OPENAI_API_KEY is not set in environment variables or config.json');
+    process.exit(1);
+}
 
 // Initialize OpenAI client
 const openai = new OpenAI({

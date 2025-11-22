@@ -1,0 +1,6 @@
+node_modules/
+.env
+config.json
+JobRecommender.exe
+.DS_Store
+*.log
